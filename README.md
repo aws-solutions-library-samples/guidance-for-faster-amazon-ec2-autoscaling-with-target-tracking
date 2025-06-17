@@ -1,11 +1,12 @@
 # Guidance for AutoScaling Groups - Faster Scaling on AWS
 
+<!--
 The Guidance title should be consistent with the title established first in Alchemy.
 
 **Example:** *Guidance for Product Substitutions on AWS*
 
 This title correlates exactly to the Guidance it’s linked to, including its corresponding sample code repository. 
-
+-->
 
 ## Table of Contents
 
@@ -46,7 +47,15 @@ Users can update an existing Target Tracking policy or create a new one with a h
 
 **Architecture Diagram:**
 
+![Repository Structure Diagram](./assets/faster_auto_scaling_ref_arch.jpg)
 
+**Architecture Steps:**
+
+1. During its bootstrap process, Elastic Comoute Cloud (EC2) instances fetch a pre-created Unified AWS CloudWatch Agent (CWAgent) configuration from AWS Systems Manager (SSM).
+2. The CWAgent running on the EC2 instances publish the chosen metric with a period of 10 (more responsive scaling), 30 or 60 (default) seconds to Amazon CloudWatch (CW).
+3. The EC2 Auto Scaling Group (ASG) monitors the group’s scaling activities and automatically tunes the CW Alarms used to invoke the ASG’s Target Tracking’s scaling policies
+ to optimize between cost and performance
+4. CloudWatch Alarms invoke the ASG’s Target Tracking scaling policies to dynamically scale the group’s number of EC2 instances.
 
 ### Cost 
 
