@@ -42,7 +42,7 @@ List the top-level sections of the README template, along with a hyperlink to th
     - To add a screenshot, create an ‘assets/images’ folder in your repository and upload your screenshot to it. Then, using the relative file path, add it to your README. 
 -->
 
-To enable the fastest response from Target Tracking policies, users can track metrics published at sub-minute granularity to AMazon CloudWatch (also known as high-resolution CloudWatch metrics). 
+To enable the fastest response from Target Tracking policies, users can track metrics published at sub-minute granularity to Amazon CloudWatch (also known as "high-resolution CloudWatch metrics"). 
 Users can update an existing Target Tracking policy or create a new one with a high-resolution metric as part of a CustomizedMetricSpecification. This enables faster reaction time for higher availability, and can sometimes lower total cost as well.
 
 **Architecture Diagram:**
