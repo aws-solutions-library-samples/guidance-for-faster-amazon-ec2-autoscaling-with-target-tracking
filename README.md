@@ -1,47 +1,19 @@
 # Guidance for AutoScaling Groups - Faster Scaling on AWS
 
-<!--
-The Guidance title should be consistent with the title established first in Alchemy.
-
-**Example:** *Guidance for Product Substitutions on AWS*
-
-This title correlates exactly to the Guidance it’s linked to, including its corresponding sample code repository. 
--->
-
 ## Table of Contents
-
-List the top-level sections of the README template, along with a hyperlink to the specific section.
-
-### Required
 
 1. [Overview](#overview)
     - [Cost](#cost)
 2. [Prerequisites](#prerequisites)
-    - [Operating System](#operating-system)
 3. [Deployment Steps](#deployment-steps)
 4. [Deployment Validation](#deployment-validation)
-5. [Running the Guidance](#running-the-guidance)
-6. [Next Steps](#next-steps)
-7. [Cleanup](#cleanup)
-
-***Optional***
-
-8. [FAQ, known issues, additional considerations, and limitations](#faq-known-issues-additional-considerations-and-limitations-optional)
-9. [Revisions](#revisions-optional)
-10. [Notices](#notices-optional)
-11. [Authors](#authors-optional)
+5. [Next Steps](#next-steps)
+6. [Cleanup](#cleanup)
+7. [FAQ, known issues, additional considerations, and limitations](#faq-known-issues-additional-considerations-and-limitations)
+8. [Notices](#notices)
+9. [Authors](#authors)
 
 ## Overview
-<!--
-1. Provide a brief overview explaining the what, why, or how of your Guidance. You can answer any one of the following to help you write this:
-
-    - **Why did you build this Guidance?**
-    - **What problem does this Guidance solve?**
-
-2. Include the architecture diagram image, as well as the steps explaining the high-level overview and flow of the architecture. 
-    - To add a screenshot, create an ‘assets/images’ folder in your repository and upload your screenshot to it. Then, using the relative file path, add it to your README. 
--->
-
 To enable the fastest response from Target Tracking policies, users can track metrics published at sub-minute granularity to Amazon CloudWatch (also known as "high-resolution CloudWatch metrics"). 
 Users can update an existing Target Tracking policy or create a new one with a high-resolution metric as part of a CustomizedMetricSpecification. This enables faster reaction time for higher availability, and can sometimes lower total cost as well.
 
@@ -51,180 +23,85 @@ Users can update an existing Target Tracking policy or create a new one with a h
 
 **Architecture Steps:**
 
-1. During its bootstrap process, Elastic Comoute Cloud (EC2) instances fetch a pre-created Unified AWS CloudWatch Agent (CWAgent) configuration from AWS Systems Manager (SSM).
+1. During its bootstrap process, Elastic Compute Cloud (EC2) instances fetch a pre-created Unified AWS CloudWatch Agent (CWAgent) configuration from AWS Systems Manager (SSM).
 2. The CWAgent running on the EC2 instances publish the chosen metric with a period of 10 (more responsive scaling), 30 or 60 (default) seconds to Amazon CloudWatch (CW).
 3. The EC2 Auto Scaling Group (ASG) monitors the group’s scaling activities and automatically tunes the CW Alarms used to invoke the ASG’s Target Tracking’s scaling policies
  to optimize between cost and performance
 4. CloudWatch Alarms invoke the ASG’s Target Tracking scaling policies to dynamically scale the group’s number of EC2 instances.
 
 ### Cost 
+_You are responsible for the cost of the AWS services used while running this Guidance. As of June 2025, the cost for running this Guidance with the default settings in the US East (N. Virginia) region is approximately $194.95 per month for with workday processing spike scaling or aproximately $59.94 per month with no scaling._
 
-This section is for a high-level cost estimate. Think of a likely straightforward scenario with reasonable assumptions based on the problem the Guidance is trying to solve. Provide an in-depth cost breakdown table in this section below ( you should use AWS Pricing Calculator to generate cost breakdown ).
+* 2 High resolution CloudWatch alarms are created (compared with 2 standard resolution alarms with default target tracking).
+* 1 Custom metric in CloudWatch is created.
+* The CW Agent sends API calls per instance at a 10 second interval, which are billed per API call according to the [CloudWatch pricing in the region being used](https://aws.amazon.com/cloudwatch/pricing/).
+* Costs can be offset by setting a more aggressive target value, if fewer buffer instances are needed to absorb load spikes.  See blog link below for a detailed example showing an 8% net monthly savings.
 
-Start this section with the following boilerplate text:
-
-_You are responsible for the cost of the AWS services used while running this Guidance. As of <month> <year>, the cost for running this Guidance with the default settings in the <Default AWS Region (Most likely will be US East (N. Virginia)) > is approximately $<n.nn> per month for processing ( <nnnnn> records )._
-
-Replace this amount with the approximate cost for running your Guidance in the default Region. This estimate should be per month and for processing/serving resonable number of requests/entities.
-
-Suggest you keep this boilerplate text:
 _We recommend creating a [Budget](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) through [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) to help manage costs. Prices are subject to change. For full details, refer to the pricing webpage for each AWS service used in this Guidance._
 
-### Sample Cost Table 
-
-**Note : Once you have created a sample cost table using AWS Pricing Calculator, copy the cost breakdown to below table and upload a PDF of the cost estimation on BuilderSpace. Do not add the link to the pricing calculator in the ReadMe.**
-
+#### Sample Cost Table 
 The following table provides a sample cost breakdown for deploying this Guidance with the default parameters in the US East (N. Virginia) Region for one month.
 
 | AWS service  | Dimensions | Cost [USD] |
-| ----------- | ------------ | ------------ |
-| Amazon API Gateway | 1,000,000 REST API calls per month  | $ 3.50month |
-| Amazon Cognito | 1,000 active users per month without advanced security feature | $ 0.00 |
+| ------------------------- | ------------------------- | ------------ |
+| Amazon CloudWatch Alarms  | 2 High-Resolution Alarms  | $ 0.60 |
+| Amazon CloudWatch Metrics | 1 Custom Metric  | $ 0.30 |
+| Amazon CloudWatch Metrics | ˜2.592m PutMetricData API Calls  | $ 25.92 |
+| Amazon EC2 | 1-10 m6g.large(s) with workday spike  | $ 168.13 |
+
 
 ## Prerequisites
 
-### Operating System
+There are no particular prerequisites into deploying this guidance, other than an user with sufficient permissions to deploy the CloudFormation template. The guidance is self-suficient and does not alter existing resources.
 
-- Talk about the base Operating System (OS) and environment that can be used to run or deploy this Guidance, such as *Mac, Linux, or Windows*. Include all installable packages or modules required for the deployment. 
-- By default, assume Amazon Linux 2/Amazon Linux 2023 AMI as the base environment. All packages that are not available by default in AMI must be listed out.  Include the specific version number of the package or module.
+### Supported Regions
 
-**Example:**
-“These deployment instructions are optimized to best work on **<Amazon Linux 2 AMI>**.  Deployment in another OS may require additional steps.”
-
-- Include install commands for packages, if applicable.
-
-
-### Third-party tools (If applicable)
-
-*List any installable third-party tools required for deployment.*
-
-
-### AWS account requirements (If applicable)
-
-*List out pre-requisites required on the AWS account if applicable, this includes enabling AWS regions, requiring ACM certificate.*
-
-**Example:** “This deployment requires you have public ACM certificate available in your AWS account”
-
-**Example resources:**
-- ACM certificate 
-- DNS record
-- S3 bucket
-- VPC
-- IAM role with specific permissions
-- Enabling a Region or service etc.
-
-
-### aws cdk bootstrap (if sample code has aws-cdk)
-
-<If using aws-cdk, include steps for account bootstrap for new cdk users.>
-
-**Example blurb:** “This Guidance uses aws-cdk. If you are using aws-cdk for first time, please perform the below bootstrapping....”
-
-### Service limits  (if applicable)
-
-<Talk about any critical service limits that affect the regular functioning of the Guidance. If the Guidance requires service limit increase, include the service name, limit name and link to the service quotas page.>
-
-### Supported Regions (if applicable)
-
-<If the Guidance is built for specific AWS Regions, or if the services used in the Guidance do not support all Regions, please specify the Region this Guidance is best suited for>
+The services discussed and used in this Guidance are available in all AWS regions.
 
 
 ## Deployment Steps
 
-Deployment steps must be numbered, comprehensive, and usable to customers at any level of AWS expertise. The steps must include the precise commands to run, and describe the action it performs.
+### Pre-Deployment Considerations
+The CloudFormation Template used in this solution was made to be self-suficient, deploying resources on their own environment on in the us-east-1 (North  Virginia) region. If you want to deploy on a different region, or adapt to your environment, read through the following guidance:
 
-* All steps must be numbered.
-* If the step requires manual actions from the AWS console, include a screenshot if possible.
-* The steps must start with the following command to clone the repo. ```git clone xxxxxxx```
-* If applicable, provide instructions to create the Python virtual environment, and installing the packages using ```requirement.txt```.
-* If applicable, provide instructions to capture the deployed resource ARN or ID using the CLI command (recommended), or console action.
+* Make sure to adapt the CloudFormation Parameters details accordingly:
+** `AMI`: Use the corresponding AMI for the region (this guidance solution is using Amazon Linux 2023 for Amazon Graviton)
+** `EC2InstanceConnectCIDR`: Use the corresponding EC2 Instance Connect CIDR for the [region](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-prerequisites.html#ec2-instance-connect-setup-security-group).
 
- 
-**Example:**
-
-1. Clone the repo using command ```git clone xxxxxxxxxx```
-2. cd to the repo folder ```cd <repo-name>```
-3. Install packages in requirements using command ```pip install requirement.txt```
-4. Edit content of **file-name** and replace **s3-bucket** with the bucket name in your account.
-5. Run this command to deploy the stack ```cdk deploy``` 
-6. Capture the domain name created by running this CLI command ```aws apigateway ............```
-
-
+### Deploying
+1. Navigate to the [Cloud Formation Console](https://us-east-1.console.aws.amazon.com/cloudformation/) in the us-east-1 (N. Virginia) region.
+2. Click the Create Stack button and select "With existing resources (import resources)" and follow the steps to upload the the `FasterScalingCFN.yml` template.
+3. When specifying Stack details, give the stack a name such as `FasterScalingDemo` and adapt any entries as needed.
+4. Be sure to perform this operation with an IAM User that has permissions 
 
 ## Deployment Validation
-
-<Provide steps to validate a successful deployment, such as terminal output, verifying that the resource is created, status of the CloudFormation template, etc.>
-
-
-**Examples:**
-
-* Open CloudFormation console and verify the status of the template with the name starting with xxxxxx.
-* If deployment is successful, you should see an active database instance with the name starting with <xxxxx> in        the RDS console.
-*  Run the following CLI command to validate the deployment: ```aws cloudformation describe xxxxxxxxxxxxx```
-
-
-
-## Running the Guidance
-
-<Provide instructions to run the Guidance with the sample data or input provided, and interpret the output received.> 
-
-This section should include:
-
-* Guidance inputs
-* Commands to run
-* Expected output (provide screenshot if possible)
-* Output description
+* Open CloudFormation console and verify the status of the template with the name starting with FasterScalingDemo.
+* If deployment is successful, you should see an EC2 Auto Scaling Group with the name starting with FasterScalingTest-AutoScalingGroup in the EC2 console for the region.
 
 ## Next Steps
+Consider if any of the following adaptations need to be made to the template before using in your environment:
 
-Provide suggestions and recommendations about how customers can modify the parameters and the components of the Guidance to further enhance it according to their requirements.
+* Update the launch template for your use case/application (e.g. using your custom AMI, or adapting the UserData script to install different software).
+* Add a Load Balancer to the ASG.
+* Use a different metric that's meaningful to your application. Keeping in mind the considerations for [metrics that work with Target Tracking](https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scaling-target-tracking.html#target-tracking-considerations).
+* Adapt the IAM Role's permissions and Security Group rules according to your organization's requirements.
 
 
 ## Cleanup
+1. Navigate to the [Cloud Formation Console](https://us-east-1.console.aws.amazon.com/cloudformation/) in the us-east-1 (N. Virginia) region.
+2. Select the Stack you deployed on the previous step and hit the "Delete" button.
 
-- Include detailed instructions, commands, and console actions to delete the deployed Guidance.
-- If the Guidance requires manual deletion of resources, such as the content of an S3 bucket, please specify.
+## FAQ, known issues, additional considerations, and limitations
 
-
-
-## FAQ, known issues, additional considerations, and limitations (optional)
-
-
-**Known issues (optional)**
-
-<If there are common known issues, or errors that can occur during the Guidance deployment, describe the issue and resolution steps here>
+**Additional considerations**
+* This sample deploys resources in a public subnet with public IP addresses to allow them to update packages from online repositories. They are not accessible externally by default. If you need to connect to the instances make sure to use [EC2 Instance Connect](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-methods.html#ec2-instance-connect-connecting-console).
+* For more information, see [Faster Scaling with EC2 Auto Scaling](https://aws.amazon.com/blogs/compute/faster-scaling-with-amazon-ec2-auto-scaling-target-tracking/).
 
 
-**Additional considerations (if applicable)**
-
-<Include considerations the customer must know while using the Guidance, such as anti-patterns, or billing considerations.>
-
-**Examples:**
-
-- “This Guidance creates a public AWS bucket required for the use-case.”
-- “This Guidance created an Amazon SageMaker notebook that is billed per hour irrespective of usage.”
-- “This Guidance creates unauthenticated public API endpoints.”
-
-
-Provide a link to the *GitHub issues page* for users to provide feedback.
-
-
-**Example:** *“For any feedback, questions, or suggestions, please use the issues tab under this repo.”*
-
-## Revisions (optional)
-
-Document all notable changes to this project.
-
-Consider formatting this section based on Keep a Changelog, and adhering to Semantic Versioning.
-
-## Notices (optional)
-
-Include a legal disclaimer
-
-**Example:**
+## Notices
 *Customers are responsible for making their own independent assessment of the information in this Guidance. This Guidance: (a) is for informational purposes only, (b) represents AWS current product offerings and practices, which are subject to change without notice, and (c) does not create any commitments or assurances from AWS and its affiliates, suppliers or licensors. AWS products or services are provided “as is” without warranties, representations, or conditions of any kind, whether express or implied. AWS responsibilities and liabilities to its customers are controlled by AWS agreements, and this Guidance is not part of, nor does it modify, any agreement between AWS and its customers.*
 
 
-## Authors (optional)
-
-Name of code contributors
+## Authors
+* Tiago Souza
+* Shahad Choudhury
