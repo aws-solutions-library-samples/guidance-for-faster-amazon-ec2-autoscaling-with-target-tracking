@@ -32,9 +32,9 @@ Users can update an existing Target Tracking policy or create a new one with a h
 ### Cost 
 _You are responsible for the cost of the AWS services used while running this Guidance. As of June 2025, the cost for running this Guidance with the default settings in the US East (N. Virginia) region is approximately $194.95 per month for with workday processing spike scaling or aproximately $59.94 per month with no scaling._
 
-* 2 High resolution CloudWatch alarms are created (compared with 2 standard resolution alarms with default target tracking).
-* 1 Custom metric in CloudWatch is created.
-* The CW Agent sends API calls per instance at a 10 second interval, which are billed per API call according to the [CloudWatch pricing in the region being used](https://aws.amazon.com/cloudwatch/pricing/).
+* Two High resolution CloudWatch alarms are created (compared with 2 standard resolution alarms with default target tracking).
+* One Custom metric in CloudWatch is created.
+* The CloudWatch Agent sends API calls per instance at a 10 second interval, which are billed per API call according to the [CloudWatch pricing in the region being used](https://aws.amazon.com/cloudwatch/pricing/).
 * Costs can be offset by setting a more aggressive target value, if fewer buffer instances are needed to absorb load spikes.  See blog link below for a detailed example showing an 8% net monthly savings.
 
 _We recommend creating a [Budget](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) through [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) to help manage costs. Prices are subject to change. For full details, refer to the pricing webpage for each AWS service used in this Guidance._
@@ -48,7 +48,7 @@ The following table provides a sample cost breakdown for deploying this Guidance
 | Amazon CloudWatch Metrics | 1 Custom Metric  | $ 0.30 |
 | Amazon CloudWatch Metrics | ˜2.592m PutMetricData API Calls  | $ 25.92 |
 | Amazon EC2 | 1-10 m6g.large(s) with workday spike  | $ 168.13 |
-
+| **Total** | | **$ 194.95/mo**|
 
 ## Prerequisites
 
