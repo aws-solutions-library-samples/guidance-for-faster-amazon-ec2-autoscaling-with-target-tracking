@@ -101,7 +101,10 @@ Consider if any of the following adaptations need to be made to the Cloid Format
 
 ## Cleanup
 1. Navigate to the [Cloud Formation Console](https://us-east-1.console.aws.amazon.com/cloudformation/) in the us-east-1 (N. Virginia) region.
-2. Select the Stack you deployed on the previous step and hit the "Delete" button.
+2. Select the Stack you deployed on the previous section, hit the "Delete" button and confirm your intent to delete it:
+
+![Deleting the guidance Stack](assets/faster-auto-scaling-stack-delete.jpg)
+*Figure 6 - Deleting the AutoScaling Group CloudFormation stack*
 
 ## FAQ, known issues, additional considerations, and limitations
 
