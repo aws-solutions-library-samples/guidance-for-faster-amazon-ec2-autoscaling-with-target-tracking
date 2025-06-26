@@ -19,7 +19,7 @@ Users can update an existing Target Tracking policy or create a new one with a h
 
 **Architecture Diagram:**
 
-![Repository Structure Diagram](./assets/faster_auto_scaling_ref_arch.jpg)
+![The architecture diagram of the solution, depicting an environment in an AWS Region, deployed within a VPC. The environment consits of an EC2 Auto Scaling Group spanning 3 Public Subnets on 3 distinct Availability Zones, each containing a single EC2 instance. The instances are shown fetching CloudWatch Agent configuration from the AWS System Managers service and publishing high-resolution metrics to Amazon CloudWatch. The diagram also shows the EC2 Auto Scaling Group dynamically updating alarms in Amazon CloudWatch, and Amazon CloudWatch invoking Target Tracking Scaling Policies on the Auto Scaling Group to dynamically scale the group.](./assets/faster_auto_scaling_ref_arch.jpg)
 
 **Architecture Steps:**
 
@@ -65,8 +65,8 @@ The services discussed and used in this Guidance are available in all AWS region
 The CloudFormation Template used in this solution was made to be self-suficient, deploying resources on their own environment on in the us-east-1 (North  Virginia) region. If you want to deploy on a different region, or adapt to your environment, read through the following guidance:
 
 * Make sure to adapt the CloudFormation Parameters details accordingly:
-** `AMI`: Use the corresponding AMI for the region (this guidance solution is using Amazon Linux 2023 for Amazon Graviton)
-** `EC2InstanceConnectCIDR`: Use the corresponding EC2 Instance Connect CIDR for the [region](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-prerequisites.html#ec2-instance-connect-setup-security-group).
+    * `AMI`: Use the corresponding AMI for the region (this guidance solution is using Amazon Linux 2023 for Amazon Graviton)
+    * `EC2InstanceConnectCIDR`: Use the corresponding EC2 Instance Connect CIDR for the [region](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-prerequisites.html#ec2-instance-connect-setup-security-group).
 
 ### Deploying
 1. Navigate to the [Cloud Formation Console](https://us-east-1.console.aws.amazon.com/cloudformation/) in the us-east-1 (N. Virginia) region.
@@ -74,9 +74,18 @@ The CloudFormation Template used in this solution was made to be self-suficient,
 3. When specifying Stack details, give the stack a name such as `FasterScalingDemo` and adapt any entries as needed.
 4. Be sure to perform this operation with an IAM User that has permissions 
 
+![The "Specify Stack Details" part of the Stack Deployment process on the AWS Console for CloudFormation, highlighting the Stack Name and other relevant stack parameters](./assets/faster-auto-scaling-stack-deployment.jpg)
+
+
 ## Deployment Validation
 * Open CloudFormation console and verify the status of the template with the name starting with FasterScalingDemo.
 * If deployment is successful, you should see an EC2 Auto Scaling Group with the name starting with FasterScalingTest-AutoScalingGroup in the EC2 console for the region.
+
+![The successful deployment of the CloudFormation Stack shown on the AWS Console for CloudFormation](./assets/faster-auto-scaling-stack-success.jpg)
+
+![The EC2 Auto Scaling Group created for by the stack](./assets/auto_scaling_group_details.jpg)
+
+![A successfully launched EC2 Instance](./assets/ec2_launched_instance_OK.jpg)
 
 ## Next Steps
 Consider if any of the following adaptations need to be made to the template before using in your environment:
