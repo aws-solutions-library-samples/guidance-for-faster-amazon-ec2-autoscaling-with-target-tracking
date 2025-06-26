@@ -19,7 +19,8 @@ Users can update an existing Target Tracking policy or create a new one with a h
 
 **Architecture Diagram:**
 
-![The architecture diagram of the solution, depicting an environment in an AWS Region, deployed within a VPC. The environment consits of an EC2 Auto Scaling Group spanning 3 Public Subnets on 3 distinct Availability Zones, each containing a single EC2 instance. The instances are shown fetching CloudWatch Agent configuration from the AWS System Managers service and publishing high-resolution metrics to Amazon CloudWatch. The diagram also shows the EC2 Auto Scaling Group dynamically updating alarms in Amazon CloudWatch, and Amazon CloudWatch invoking Target Tracking Scaling Policies on the Auto Scaling Group to dynamically scale the group.](./assets/faster_auto_scaling_ref_arch.jpg)
+![The architecture diagram of the solution deployed within a VPC](./assets/faster_auto_scaling_ref_arch.jpg)
+*Figure 1 - Reference Architecture of the guidance deployed within a VPC*
 
 **Architecture Steps:**
 
@@ -40,7 +41,7 @@ _You are responsible for the cost of the AWS services used while running this Gu
 _We recommend creating a [Budget](https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html) through [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/) to help manage costs. Prices are subject to change. For full details, refer to the pricing webpage for each AWS service used in this Guidance._
 
 #### Sample Cost Table 
-The following table provides a sample cost breakdown for deploying this Guidance with the default parameters in the US East (N. Virginia) Region for one month.
+The following table provides a sample cost breakdown for deploying this Guidance with the default parameters in the US East (N. Virginia) Region `us-east-1` for one month.
 
 | AWS service  | Dimensions | Cost [USD] |
 | ------------------------- | ------------------------- | ------------ |
@@ -52,12 +53,11 @@ The following table provides a sample cost breakdown for deploying this Guidance
 
 ## Prerequisites
 
-There are no particular prerequisites into deploying this guidance, other than an user with sufficient permissions to deploy the CloudFormation template. The guidance is self-suficient and does not alter existing resources.
+There are no particular prerequisites into deploying this guidance, other than an user with sufficient permissions to deploy the CloudFormation template. The guidance is self-sufficient and does not alter any existing resources.
 
 ### Supported Regions
 
-The services discussed and used in this Guidance are available in all AWS regions.
-
+The services discussed and used in this guidance are available in all AWS regions.
 
 ## Deployment Steps
 
@@ -75,23 +75,23 @@ The CloudFormation Template used in this solution was made to be self-suficient,
 4. Be sure to perform this operation with an IAM User that has permissions 
 
 ![The "Specify Stack Details" part of the Stack Deployment process on the AWS Console for CloudFormation, highlighting the Stack Name and other relevant stack parameters](./assets/faster-auto-scaling-stack-deployment.jpg)
-
+*Figure 2 - Guidance CloudFormation Stack input parametes*
 
 ## Deployment Validation
-* Open CloudFormation console and verify the status of the template with the name starting with FasterScalingDemo.
-* If deployment is successful, you should see an EC2 Auto Scaling Group with the name starting with FasterScalingTest-AutoScalingGroup in the EC2 console for the region.
+* Open CloudFormation console and verify the status of the template with the name starting with `FasterScalingDemo`.
+* If deployment is successful, you should see an EC2 Auto Scaling Group with the name starting with `FasterScalingTest-AutoScalingGroup` in the EC2 console for the region.
 
 ![The successful deployment of the CloudFormation Stack shown on the AWS Console for CloudFormation](./assets/faster-auto-scaling-stack-success.jpg)
-*The CloudFormation Stack Successfully Deployed*
+*Figure 3 - Guidance CloudFormation Stack Successfully Deployed*
 
 ![The EC2 Auto Scaling Group created by the stack](./assets/auto_scaling_group_details.jpg)
-*The EC2 AutoScaling Group created by the stack*
+*Figure 4 - The EC2 AutoScaling Group created by the stack*
 
 ![A successfully launched EC2 Instance](./assets/ec2_launched_instance_OK.jpg)
-*A successfully launched EC2 Instance*
+*Figure 5 - A successfully launched by auto-scaling EC2 Instance*
 
 ## Next Steps
-Consider if any of the following adaptations need to be made to the template before using in your environment:
+Consider if any of the following adaptations need to be made to the Cloid Formation template before using in your environment:
 
 * Update the launch template for your use case/application (e.g. using your custom AMI, or adapting the UserData script to install different software).
 * Add a Load Balancer to the ASG.
@@ -115,5 +115,6 @@ Consider if any of the following adaptations need to be made to the template bef
 
 
 ## Authors
-* Tiago Souza
-* Shahad Choudhury
+* Tiago Souza, Solutions Architect
+* Shahad Choudhury, Sr. Cloud Support Engineer
+* Daniel Zilberman, Sr. Solutions Architect, Technical Solutions
