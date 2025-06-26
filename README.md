@@ -82,10 +82,13 @@ The CloudFormation Template used in this solution was made to be self-suficient,
 * If deployment is successful, you should see an EC2 Auto Scaling Group with the name starting with FasterScalingTest-AutoScalingGroup in the EC2 console for the region.
 
 ![The successful deployment of the CloudFormation Stack shown on the AWS Console for CloudFormation](./assets/faster-auto-scaling-stack-success.jpg)
+*The CloudFormation Stack Successfully Deployed*
 
-![The EC2 Auto Scaling Group created for by the stack](./assets/auto_scaling_group_details.jpg)
+![The EC2 Auto Scaling Group created by the stack](./assets/auto_scaling_group_details.jpg)
+*The EC2 AutoScaling Group created by the stack*
 
 ![A successfully launched EC2 Instance](./assets/ec2_launched_instance_OK.jpg)
+*A successfully launched EC2 Instance*
 
 ## Next Steps
 Consider if any of the following adaptations need to be made to the template before using in your environment:
