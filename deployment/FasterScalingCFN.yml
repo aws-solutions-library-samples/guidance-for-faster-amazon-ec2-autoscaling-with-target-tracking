@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: This template deploys a demo of Faster Scaling with EC2 Auto Scaling (SOXXXX)
+Description: This template deploys a demo of Faster Scaling with EC2 Auto Scaling (SO9601)
 Parameters:
   EnvironmentName:
     Description: Prefix name to be applied to resources created by this Demo
