@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: This template deploys a guidance for Faster Scaling with EC2 Auto Scaling (SO9601)
+Description: (SO9601) This template deploys the Guidance for Faster EC2 Auto Scaling with Target Tracking 
 Parameters:
   EnvironmentName:
     Description: Prefix name to be applied to resources created by this Demo
